@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Plan Cayo Perico heist payouts, loot bags, crew cuts, fees, and Elite Challenge bonuses." />
-  <meta name="theme-color" content="#07110d" />
+  <meta name="theme-color" content="#121212" />
   <title>GTA V | Cayo Perico Heist Calculator</title>
   <link rel="canonical" href="https://gta.panas.dev/" />
   <link rel="icon" type="image/png" href="/favicon.png" />
@@ -27,53 +27,95 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    try {
+      const savedTheme = localStorage.getItem("gta-calculator-theme");
+      if (savedTheme === "light" || savedTheme === "dark") document.documentElement.dataset.theme = savedTheme;
+    } catch (_) {}
+  </script>
   <style>
     :root {
-      --bg: #07110d;
-      --bg-2: #0c1a14;
-      --panel: #10211a;
-      --panel-2: #163027;
-      --line: rgba(212, 175, 106, 0.22);
-      --line-strong: rgba(212, 175, 106, 0.45);
-      --gold: #d4af6a;
-      --gold-2: #f0d9a0;
-      --cream: #f3ead8;
-      --muted: #9bb0a6;
-      --lagoon: #3ecfb0;
-      --danger: #e35d6a;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-      --gold-loot: #e3c36a;
-      --coke-loot: #e8e6e1;
-      --weed-loot: #8fd16a;
-      --paint-loot: #d4a0ff;
-      --cash-loot: #5ee09a;
+      --background: oklch(0.145 0 0);
+      --foreground: oklch(0.985 0 0);
+      --card: oklch(0.205 0 0);
+      --card-foreground: oklch(0.985 0 0);
+      --popover: oklch(0.205 0 0);
+      --popover-foreground: oklch(0.985 0 0);
+      --primary: oklch(0.448 0.119 151.328);
+      --primary-foreground: oklch(0.982 0.018 155.826);
+      --secondary: oklch(0.274 0.006 286.033);
+      --secondary-foreground: oklch(0.985 0 0);
+      --muted: oklch(0.269 0 0);
+      --muted-foreground: oklch(0.708 0 0);
+      --accent: oklch(0.269 0 0);
+      --accent-foreground: oklch(0.985 0 0);
+      --destructive: oklch(0.704 0.191 22.216);
+      --border: oklch(1 0 0 / 10%);
+      --input: oklch(1 0 0 / 15%);
+      --ring: oklch(0.556 0 0);
+      --chart-1: oklch(0.87 0 0);
+      --chart-2: oklch(0.556 0 0);
+      --chart-3: oklch(0.439 0 0);
+      --chart-4: oklch(0.371 0 0);
+      --chart-5: oklch(0.269 0 0);
+      --radius: 0.625rem;
+
+      --bg: var(--background);
+      --bg-2: var(--background);
+      --panel: var(--card);
+      --panel-2: var(--secondary);
+      --line: var(--border);
+      --line-strong: oklch(0.448 0.119 151.328 / 58%);
+      --gold: var(--foreground);
+      --gold-2: var(--foreground);
+      --cream: var(--foreground);
+      --lagoon: var(--primary-foreground);
+      --danger: var(--destructive);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.32);
+      --gold-loot: var(--chart-1);
+      --coke-loot: var(--chart-2);
+      --weed-loot: var(--chart-3);
+      --paint-loot: var(--chart-4);
+      --cash-loot: var(--chart-5);
+      --switch-thumb: var(--foreground);
+    }
+
+    :root[data-theme="light"] {
+      --background: oklch(1 0 0);
+      --foreground: oklch(0.145 0 0);
+      --card: oklch(1 0 0);
+      --card-foreground: oklch(0.145 0 0);
+      --popover: oklch(1 0 0);
+      --popover-foreground: oklch(0.145 0 0);
+      --primary: oklch(0.527 0.154 150.069);
+      --primary-foreground: oklch(0.982 0.018 155.826);
+      --secondary: oklch(0.967 0.001 286.375);
+      --secondary-foreground: oklch(0.21 0.006 285.885);
+      --muted: oklch(0.97 0 0);
+      --muted-foreground: oklch(0.556 0 0);
+      --accent: oklch(0.97 0 0);
+      --accent-foreground: oklch(0.205 0 0);
+      --destructive: oklch(0.577 0.245 27.325);
+      --border: oklch(0.922 0 0);
+      --input: oklch(0.922 0 0);
+      --ring: oklch(0.708 0 0);
+      --switch-thumb: var(--background);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.08);
     }
 
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; }
     body {
-      font-family: Manrope, system-ui, sans-serif;
+      font-family: Geist, system-ui, sans-serif;
       color: var(--cream);
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(62, 207, 176, 0.12), transparent 50%),
-        radial-gradient(900px 500px at 110% 10%, rgba(212, 175, 106, 0.14), transparent 45%),
-        linear-gradient(180deg, #0a1712 0%, var(--bg) 40%, #050c0a 100%);
-    }
-
-    .noise {
-      pointer-events: none;
-      position: fixed;
-      inset: 0;
-      opacity: 0.04;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
-      z-index: 0;
+      background: var(--background);
     }
 
     .wrap {
       position: relative;
       z-index: 1;
-      max-width: 1280px;
+      max-width: 1340px;
       margin: 0 auto;
       padding: 28px 20px 64px;
     }
@@ -83,22 +125,22 @@
       justify-content: space-between;
       gap: 24px;
       align-items: flex-end;
-      margin-bottom: 28px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--line);
+      margin-bottom: 22px;
+      padding-bottom: 22px;
+      border-bottom: 0;
     }
 
     .kicker {
       font-size: 11px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--muted-foreground);
       font-weight: 700;
       margin: 0 0 8px;
     }
 
     h1 {
-      font-family: Syne, sans-serif;
+      font-family: Geist, sans-serif;
       font-size: clamp(32px, 5vw, 52px);
       line-height: 0.95;
       margin: 0;
@@ -107,51 +149,287 @@
 
     .hero p {
       margin: 10px 0 0;
-      color: var(--muted);
+      color: var(--muted-foreground);
       max-width: 52ch;
     }
 
     .patch {
       flex-shrink: 0;
       border: 1px solid var(--line);
-      background: rgba(16, 33, 26, 0.8);
+      background: var(--card);
       padding: 12px 14px;
-      border-radius: 14px;
+      border-radius: var(--radius);
       font-size: 12px;
-      color: var(--muted);
+      color: var(--muted-foreground);
       text-align: right;
     }
 
     .patch strong { display: block; color: var(--gold-2); font-size: 13px; }
 
+    .hero-actions {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+
+    .hero-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+    .theme-toggle {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      background: var(--background);
+      color: var(--foreground);
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    }
+
+    .theme-toggle:hover { background: var(--accent); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+    .theme-toggle svg { width: 17px; height: 17px; }
+    .theme-icon { display: none; }
+    :root[data-theme="dark"] .theme-icon-sun,
+    :root[data-theme="light"] .theme-icon-moon { display: block; }
+
+    .layout-launch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+      font: 700 12px Geist, sans-serif;
+      cursor: pointer;
+    }
+
+    .layout-launch:hover { background: var(--accent); }
+
+    .layout-launch span { color: inherit; font-weight: 600; opacity: 0.75; }
+    .layout-launch strong { color: inherit; }
+
     .layout {
       display: grid;
-      grid-template-columns: minmax(320px, 420px) 1fr;
-      gap: 22px;
+      grid-template-columns: 1fr;
+      gap: 16px;
       align-items: start;
     }
 
+    .setup-section {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .setup-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 1px 1px 13px;
+    }
+
+    .setup-heading h2 {
+      margin: 0;
+      color: var(--foreground);
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+    }
+
+    .setup-heading p {
+      margin: 3px 0 0;
+      color: var(--muted-foreground);
+      font-size: 12px;
+    }
+
     .panel {
-      background: linear-gradient(180deg, rgba(22, 48, 39, 0.9), rgba(16, 33, 26, 0.92));
+      background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 20px;
+      border-radius: var(--radius);
       padding: 18px;
       box-shadow: var(--shadow);
     }
 
-    .controls { position: sticky; top: 16px; }
-
     h2 {
-      font-family: Syne, sans-serif;
-      font-size: 15px;
-      letter-spacing: 0.08em;
+      font-family: Geist, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.11em;
       text-transform: uppercase;
       margin: 0 0 12px;
-      color: var(--gold-2);
+      color: var(--muted-foreground);
     }
 
     .section { margin-bottom: 18px; }
     .section:last-child { margin-bottom: 0; }
+
+    .setup-controls { border-top: 0; }
+
+    .setup-group {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      padding: 14px 2px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .setup-group:last-child { padding-bottom: 1px; border-bottom: 0; }
+
+    .setup-group-head { padding-top: 3px; }
+
+    .setup-group-head h3 {
+      margin: 0;
+      color: var(--foreground);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .setup-group-head p {
+      margin: 3px 0 0;
+      color: var(--muted-foreground);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .setup-group-crew .seg { max-width: 360px; }
+
+    .setup-overlay {
+      position: fixed;
+      z-index: 20;
+      width: min(760px, calc(100vw - 24px));
+    }
+
+    .setup-overlay[hidden] { display: none; }
+
+    .overlay-backdrop { display: none; }
+
+    .setup-dialog {
+      position: relative;
+      width: 100%;
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--popover);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.62);
+    }
+
+    .dialog-head {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--popover);
+      backdrop-filter: blur(12px);
+    }
+
+    .dialog-head h2 {
+      margin: 0;
+      color: var(--cream);
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+    }
+
+    .dialog-close {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--bg-2);
+      color: var(--cream);
+      font: 500 21px/1 Geist, sans-serif;
+      cursor: pointer;
+    }
+
+    .overlay-panel { padding: 18px; }
+    .overlay-panel[hidden] { display: none; }
+
+    .overlay-panel .target-grid { grid-template-columns: repeat(3, 1fr); }
+    .overlay-panel .loot-list { grid-template-columns: repeat(2, 1fr); }
+
+    .layout-popover { width: min(390px, calc(100vw - 24px)); }
+
+    .style-options {
+      display: grid;
+      gap: 5px;
+      padding: 8px;
+    }
+
+    .style-option {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 11px;
+      align-items: center;
+      min-height: 58px;
+      padding: 7px 8px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--cream);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .style-option:hover {
+      border-color: var(--border);
+      background: var(--accent);
+    }
+
+    .style-option.active {
+      border-color: var(--line-strong);
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .style-option strong { display: block; font-size: 13px; }
+    .style-option small { display: block; margin-top: 2px; color: var(--muted-foreground); font-size: 11px; line-height: 1.25; }
+    .style-option.active small { color: inherit; opacity: 0.72; }
+
+    .bar-preview {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      width: 88px;
+      height: 34px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 6px;
+      background: #070807;
+    }
+
+    .bar-preview i {
+      display: block;
+      flex: 1;
+      height: 18px;
+      border-radius: 2px;
+      background: #1b1e1b;
+    }
+
+    [data-style-choice="segmented"] .bar-preview { gap: 3px; }
+    [data-style-choice="segmented"] .bar-preview i { border: 1px solid #303530; border-radius: 3px; }
+    [data-style-choice="pills"] .bar-preview { border: 0; background: transparent; }
+    [data-style-choice="pills"] .bar-preview i { border: 1px solid #303530; border-radius: 99px; background: #111311; }
+    [data-style-choice="cards"] .bar-preview i { height: 25px; border: 1px solid #303530; border-radius: 4px; }
+    [data-style-choice="minimal"] .bar-preview { align-items: end; border: 0; background: transparent; }
+    [data-style-choice="minimal"] .bar-preview i { height: 3px; border-radius: 0; }
+    [data-style-choice="dock"] .bar-preview { justify-content: center; border-radius: 99px; }
+    [data-style-choice="dock"] .bar-preview i { flex: 0 0 15px; height: 15px; border-radius: 99px; }
 
     .seg {
       display: grid;
@@ -159,219 +437,370 @@
       gap: 8px;
     }
 
-    .seg button, .target-grid button, .stepper button, .toggle {
+    .seg button, .target-grid button, .stepper button {
       font-family: inherit;
       cursor: pointer;
       border: 1px solid var(--line);
-      background: var(--bg-2);
+      background: transparent;
       color: var(--cream);
+    }
+
+    .seg button, .target-grid button {
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.24);
+      transition: background 140ms ease, border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .seg button:hover, .target-grid button:hover { background: var(--muted); }
+
+    .seg button:focus-visible, .target-grid button:focus-visible {
+      outline: 0;
+      border-color: var(--ring);
+      box-shadow: 0 0 0 3px oklch(0.556 0 0 / 28%);
     }
 
     .seg button {
       height: 44px;
-      border-radius: 12px;
+      border-radius: calc(var(--radius) - 2px);
       font-weight: 700;
       font-size: 16px;
     }
 
-    .seg button.active, .target-grid button.active, .toggle.active {
-      background: linear-gradient(180deg, #3a2d16, #2a210f);
-      border-color: var(--line-strong);
-      color: var(--gold-2);
-      box-shadow: inset 0 0 0 1px rgba(212, 175, 106, 0.2);
+    .seg button.active, .target-grid button.active {
+      background: var(--accent);
+      border-color: var(--input);
+      color: var(--accent-foreground);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.24), inset 0 0 0 1px oklch(1 0 0 / 4%);
     }
 
     .target-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
     }
 
     .target-grid button {
       text-align: left;
-      border-radius: 14px;
-      padding: 10px 12px;
+      min-height: 66px;
+      border-radius: calc(var(--radius) - 2px);
+      padding: 10px;
     }
 
     .target-grid .name { display: block; font-weight: 700; }
-    .target-grid .val { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
-    .target-grid button.active .val { color: var(--gold); }
+    .target-grid .val { display: block; color: var(--muted-foreground); font-size: 12px; margin-top: 2px; }
+    .target-grid button.active .val { color: inherit; opacity: 0.72; }
 
-    .toggles { display: grid; gap: 8px; }
+    .toggles { display: grid; gap: 0; }
 
-    .toggle {
+    .switch-field {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      width: 100%;
-      border-radius: 14px;
-      padding: 11px 12px;
-      text-align: left;
+      gap: 16px;
+      min-width: 0;
+      min-height: 44px;
+      padding: 4px 12px;
+      cursor: pointer;
     }
 
-    .toggle span { font-weight: 650; }
-    .toggle small { display: block; color: var(--muted); font-weight: 500; margin-top: 2px; }
-    .pill {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      padding: 4px 8px;
+    .switch-field + .switch-field { border-left: 1px solid var(--border); }
+    .switch-copy { min-width: 0; }
+    .switch-copy strong { display: block; font-size: 13px; font-weight: 650; }
+    .switch-copy small { display: block; margin-top: 2px; color: var(--muted-foreground); font-size: 11px; font-weight: 500; }
+
+    .switch-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .switch-control {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      width: 32px;
+      height: 18px;
+      padding: 1px;
       border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--muted);
+      border: 1px solid transparent;
+      background: var(--input);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+      transition: background 150ms ease, box-shadow 150ms ease;
     }
-    .toggle.active .pill { color: var(--bg); background: var(--gold); border-color: var(--gold); }
 
-    .loot-list { display: grid; gap: 8px; }
+    .switch-thumb {
+      display: block;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--switch-thumb);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+      transition: transform 150ms ease, background 150ms ease;
+    }
+
+    .switch-input:checked + .switch-control { background: var(--primary); }
+    .switch-input:checked + .switch-control .switch-thumb {
+      transform: translateX(14px);
+      background: var(--primary-foreground);
+    }
+
+    .switch-input:focus-visible + .switch-control {
+      box-shadow: 0 0 0 3px oklch(0.556 0 0 / 35%);
+    }
+
+    .loot-list {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
 
     .loot-row {
       display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 10px;
-      background: var(--bg-2);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 8px 8px 8px 12px;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      gap: 14px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 2px 10px;
     }
 
-    .loot-meta { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .swatch {
-      width: 10px;
+    .loot-meta { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+    .loot-icon {
+      display: grid;
+      width: 28px;
       height: 28px;
-      border-radius: 99px;
+      place-items: center;
+      color: var(--muted-foreground);
       flex-shrink: 0;
     }
+    .loot-icon svg { width: 20px; height: 20px; }
     .loot-meta strong { display: block; font-size: 14px; }
-    .loot-meta em { display: block; font-style: normal; color: var(--muted); font-size: 11px; }
+    .loot-meta em { display: block; margin-top: 3px; font-style: normal; color: var(--muted-foreground); font-size: 11px; }
+    .loot-meta em span { display: block; white-space: nowrap; }
+    .loot-meta em b { color: oklch(0.8 0 0); font-weight: 600; }
 
     .loot-row.locked {
       opacity: 0.55;
-      outline: 1px dashed rgba(227, 93, 106, 0.35);
     }
     .loot-row.locked .stepper button,
     .loot-row.locked .stepper input {
       pointer-events: none;
-      color: var(--muted);
+      color: var(--muted-foreground);
     }
 
-    .stepper { display: flex; align-items: center; gap: 4px; }
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+      height: 32px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      background: var(--background);
+    }
     .stepper button {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      font-size: 20px;
+      width: 28px;
+      height: 30px;
+      border: 0;
+      border-radius: 0;
+      font-size: 16px;
       line-height: 1;
     }
+    .stepper button:hover { background: var(--accent); }
+    .stepper button:disabled { cursor: not-allowed; opacity: 0.4; background: transparent; }
     .stepper input {
-      width: 52px;
-      height: 36px;
+      flex: 1;
+      width: 30px;
+      height: 30px;
       border: 0;
+      border-inline: 1px solid var(--border);
       background: transparent;
       color: var(--cream);
-      font: 700 16px/1 Manrope, sans-serif;
+      font: 700 16px/1 Geist, sans-serif;
       text-align: center;
     }
 
-    .cuts { display: grid; gap: 8px; }
-    .cut-row {
-      display: grid;
-      grid-template-columns: 1fr 72px;
-      gap: 8px;
-      align-items: center;
-    }
-    .cut-row label { color: var(--muted); font-size: 13px; font-weight: 600; }
-    .cut-row input {
-      height: 38px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: var(--bg-2);
-      color: var(--gold-2);
-      text-align: center;
-      font: 700 14px Manrope, sans-serif;
-    }
-    .cut-bar {
-      height: 10px;
+    .card-cut {
       display: flex;
-      border-radius: 99px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      margin-top: 8px;
-    }
-    .cut-bar span { display: block; height: 100%; }
-    .warn {
-      color: var(--danger);
-      font-size: 12px;
-      margin: 8px 0 0;
-      display: none;
-    }
-    .warn.show { display: block; }
-
-    .banner {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 16px;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 18px;
-      border-radius: 20px;
-      border: 1px solid var(--line-strong);
-      background: linear-gradient(90deg, rgba(62, 207, 176, 0.12), rgba(212, 175, 106, 0.08));
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-top: 4px;
+      padding: 7px 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .cut-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+    }
+
+    .card-cut input {
+      width: 54px;
+      height: 32px;
+      padding: 0 6px;
+      border: 1px solid var(--input);
+      border-radius: calc(var(--radius) - 2px);
+      background: transparent;
+      color: var(--gold);
+      text-align: center;
+      font: 800 14px Geist, sans-serif;
+    }
+
+    .card-cut input:disabled { opacity: 0.65; }
+    .cut-input em { font-style: normal; }
+
+    .banner {
+      display: grid;
+      gap: 12px;
+      padding: 0 2px 20px;
+      border-radius: 0;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: transparent;
+      margin-bottom: 0;
+    }
+
+    .banner-copy { display: flex; justify-content: flex-end; }
+
+    .banner-summary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px 16px;
+    }
+
+    main {
+      margin-top: 22px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .result-kicker {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted-foreground);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .banner.bad {
-      border-color: rgba(227, 93, 106, 0.45);
-      background: rgba(227, 93, 106, 0.08);
+      border-color: var(--border);
+      background: transparent;
     }
 
-    .banner h3 { margin: 0; font-family: Syne, sans-serif; font-size: 20px; }
-    .banner p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .banner.bad h3 { color: var(--danger); }
+
+    .banner h3 { margin: 0; font-family: Geist, sans-serif; font-size: 20px; }
+    .banner p { margin: 4px 0 0; color: var(--muted-foreground); font-size: 13px; }
     .total-cash {
-      font-family: Syne, sans-serif;
+      font-family: Geist, sans-serif;
       font-size: clamp(28px, 4vw, 40px);
       color: var(--gold-2);
     }
 
+    .total-label {
+      color: var(--muted-foreground);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .banner-actions {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+
+    .copy-results {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+      font: 700 11px Geist, sans-serif;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+    }
+
+    .copy-results:hover {
+      background: var(--accent);
+      border-color: var(--input);
+      transform: translateY(-1px);
+    }
+
+    .copy-results:disabled { cursor: wait; transform: none; }
+    .copy-results.copied { color: var(--primary-foreground); border-color: var(--primary); background: var(--primary); }
+    .copy-results.failed { color: var(--danger); border-color: var(--destructive); }
+
     .players {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 12px;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
     }
 
     .player-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 18px 16px;
       min-height: 100%;
     }
 
+    .player-card:first-child { padding-left: 2px; }
+    .player-card:last-child { padding-right: 2px; }
+    .player-card + .player-card { border-left: 1px solid var(--border); }
+
     .player-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      display: grid;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .player-top h3 { margin: 0; font-size: 18px; }
-    .player-top .cut { color: var(--gold); font-weight: 800; font-size: 13px; }
+    .player-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-top h3 { margin: 0; font-size: 17px; }
 
     .bag { margin: 0 0 14px; }
     .bag-label {
       display: flex;
       justify-content: space-between;
       font-size: 12px;
-      color: var(--muted);
+      color: var(--muted-foreground);
       margin-bottom: 6px;
       font-weight: 700;
     }
     .bag-track {
       height: 16px;
       border-radius: 99px;
-      background: #08140f;
+      background: var(--muted);
       border: 1px solid var(--line);
       display: flex;
       overflow: hidden;
@@ -383,33 +812,38 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      background: var(--bg-2);
-      border-radius: 12px;
-      padding: 8px 10px;
-      border: 1px solid var(--line);
+      background: transparent;
+      border-radius: 0;
+      padding: 8px 0;
+      border: 0;
+      border-top: 1px solid var(--border);
     }
-    .pick .qty { font-weight: 800; min-width: 3.2em; color: var(--gold-2); }
-    .pick .kind { flex: 1; font-weight: 650; }
-    .pick .fill { color: var(--muted); font-size: 12px; }
-    .empty-pick { color: var(--muted); font-size: 13px; padding: 8px 2px; }
+    .pick-icon { display: grid; width: 20px; height: 20px; place-items: center; color: var(--muted-foreground); flex: 0 0 20px; }
+    .pick-icon svg { width: 17px; height: 17px; }
+    .pick .qty { min-width: 2.2em; color: var(--foreground); font-size: 18px; font-weight: 750; }
+    .pick .kind { flex: 1; color: var(--muted-foreground); font-size: 13px; font-weight: 600; }
+    .pick .fill { color: var(--muted-foreground); font-size: 12px; }
+    .empty-pick { color: var(--muted-foreground); font-size: 13px; padding: 8px 2px; }
 
     .share-note {
       font-size: 12px;
-      color: var(--gold);
-      background: rgba(212, 175, 106, 0.08);
-      border: 1px dashed var(--line-strong);
-      border-radius: 12px;
-      padding: 8px 10px;
+      color: var(--muted-foreground);
+      background: transparent;
+      border: 0;
+      border-left: 2px solid var(--border);
+      border-radius: 0;
+      padding: 2px 0 2px 10px;
       margin-bottom: 12px;
     }
 
-    .pay { border-top: 1px solid var(--line); padding-top: 12px; }
-    .pay .net { font-family: Syne, sans-serif; font-size: 28px; color: var(--gold-2); }
+    .pay { margin-top: auto; border-top: 1px solid var(--line); padding-top: 12px; }
+    .pay-label { display: block; margin-bottom: 4px; color: var(--muted-foreground); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .pay .net { font-family: Geist, sans-serif; font-size: 28px; color: var(--gold-2); font-weight: 750; }
     .pay ul {
       list-style: none;
       margin: 8px 0 0;
       padding: 0;
-      color: var(--muted);
+      color: var(--muted-foreground);
       font-size: 12px;
     }
     .pay li { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
@@ -421,46 +855,139 @@
       font-weight: 800;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      padding: 5px 8px;
-      border-radius: 999px;
+      padding: 0;
+      border-radius: 0;
     }
-    .badge.yes { background: rgba(62, 207, 176, 0.16); color: var(--lagoon); }
-    .badge.no { background: rgba(227, 93, 106, 0.12); color: var(--danger); }
+    .badge::before { content: ""; width: 7px; height: 7px; border-radius: 999px; background: currentColor; }
+    .badge.yes { background: transparent; color: var(--primary); }
+    .badge.no { background: transparent; color: var(--danger); }
 
     .breakdown {
-      margin-top: 12px;
+      margin-top: 0;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 8px;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
     }
     .stat {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
+      background: transparent;
+      border: 0;
+      border-left: 1px solid var(--border);
+      border-radius: 0;
+      padding: 14px 12px;
     }
-    .stat span { display: block; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .stat:first-child { border-left: 0; padding-left: 2px; }
+    .stat span { display: block; color: var(--muted-foreground); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
     .stat strong { display: block; margin-top: 4px; font-size: 16px; }
 
-    .left-on { margin-top: 12px; color: var(--muted); font-size: 13px; }
+    .left-on { margin-top: 12px; color: var(--muted-foreground); font-size: 13px; }
 
     footer.note {
       margin-top: 18px;
-      color: var(--muted);
+      color: var(--muted-foreground);
       font-size: 12px;
       line-height: 1.5;
     }
 
-    @media (max-width: 920px) {
-      .layout { grid-template-columns: 1fr; }
-      .controls { position: static; }
+    /* Five expanded layouts. No setup field is hidden in any option. */
+    .setup-group-finale .toggles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    body[data-setup-style="pills"] .seg button,
+    body[data-setup-style="pills"] .target-grid button,
+    body[data-setup-style="pills"] .loot-row { border-radius: 999px; }
+
+    body[data-setup-style="pills"] .loot-row { padding-left: 16px; }
+
+    body[data-setup-style="cards"] .setup-controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    body[data-setup-style="cards"] .setup-group {
+      display: block;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--background);
+    }
+
+    body[data-setup-style="cards"] .setup-group-head { margin-bottom: 12px; padding: 0; }
+
+    body[data-setup-style="cards"] .setup-group-primary,
+    body[data-setup-style="cards"] .setup-group-loot { grid-column: 1 / -1; }
+
+    body[data-setup-style="minimal"] .setup-section {
+      padding-inline: 2px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    body[data-setup-style="minimal"] .setup-group { padding-block: 18px; }
+
+    body[data-setup-style="dock"] .setup-controls {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 10px;
+      padding-top: 10px;
+    }
+
+    body[data-setup-style="dock"] .setup-group {
+      display: block;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--background);
+    }
+
+    body[data-setup-style="dock"] .setup-group-head { margin-bottom: 12px; padding: 0; }
+    body[data-setup-style="dock"] .setup-group-crew { grid-column: span 4; }
+    body[data-setup-style="dock"] .setup-group-finale { grid-column: span 8; }
+    body[data-setup-style="dock"] .setup-group-primary,
+    body[data-setup-style="dock"] .setup-group-loot { grid-column: 1 / -1; }
+
+    input[type="number"] { appearance: textfield; }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { margin: 0; appearance: none; }
+
+    @media (max-width: 1040px) {
+      .setup-group { grid-template-columns: 130px minmax(0, 1fr); }
+      .setup-group-finale .toggles { grid-template-columns: 1fr; }
+      .switch-field + .switch-field { border-left: 0; border-top: 1px solid var(--border); }
+      .loot-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      body[data-setup-style="dock"] .setup-group-crew,
+      body[data-setup-style="dock"] .setup-group-finale { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 760px) {
       header.hero { flex-direction: column; align-items: flex-start; }
       .patch { text-align: left; }
+      .hero-actions { justify-items: start; }
+      .hero-meta { align-items: flex-start; }
+      .setup-group { grid-template-columns: 1fr; gap: 10px; }
+      .setup-group-head { padding-top: 0; }
+      .target-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .loot-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      body[data-setup-style="cards"] .setup-controls { grid-template-columns: 1fr; }
+      body[data-setup-style="cards"] .setup-group { grid-column: auto; }
+    }
+
+    @media (max-width: 540px) {
+      .wrap { padding-inline: 12px; }
+      .setup-heading { align-items: flex-start; }
+      .setup-heading p { max-width: 22ch; }
+      .setup-dialog { max-height: calc(100vh - 20px); }
+      .loot-list { grid-template-columns: 1fr; }
+      .banner-actions { width: 100%; justify-items: stretch; }
+      .total-cash { text-align: left; }
     }
   </style>
 </head>
-<body>
-  <div class="noise"></div>
+<body data-setup-style="minimal">
   <div class="wrap">
     <header class="hero">
       <div>
@@ -468,56 +995,74 @@
         <h1>Heist payout planner</h1>
         <p>Enter what you scoped on the island. The planner fills every bag with the highest-value mix, splits gold tables when it helps, and shows each player’s take after cuts, fees, and Elite. Solo crews skip gold — those compound rooms need two players.</p>
       </div>
-      <div class="patch">
-        <strong>August 2026 values</strong>
-        After Title Update 1.73 (14 Jul 2026)
+      <div class="hero-actions">
+        <div class="hero-meta">
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch to light theme">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.4A8.5 8.5 0 0 1 9.6 3.5 8.5 8.5 0 1 0 20.5 14.4Z"/></svg>
+          </button>
+          <div class="patch">
+            <strong>August 2026 values</strong>
+            After Title Update 1.73 (14 Jul 2026)
+          </div>
+        </div>
       </div>
     </header>
 
     <div class="layout">
-      <aside class="panel controls">
-        <div class="section">
-          <h2>Crew</h2>
-          <div class="seg" id="playerSeg"></div>
-        </div>
+      <section class="setup-section" aria-label="Heist setup">
+        <div class="setup-controls">
+          <section class="setup-group setup-group-crew">
+            <header class="setup-group-head">
+              <h3>Crew size</h3>
+              <p>Players in the finale</p>
+            </header>
+            <div class="seg" id="playerSeg" role="group" aria-label="Crew size"></div>
+          </section>
 
-        <div class="section">
-          <h2>Cuts</h2>
-          <div class="cuts" id="cuts"></div>
-          <div class="cut-bar" id="cutBar"></div>
-          <p class="warn" id="cutWarn">Cuts must add up to 100%. Extra players need at least 15% each.</p>
-        </div>
+          <section class="setup-group setup-group-primary">
+            <header class="setup-group-head">
+              <h3>Primary target</h3>
+              <p>Main objective value</p>
+            </header>
+            <div class="target-grid" id="primaries" role="group" aria-label="Primary target"></div>
+          </section>
 
-        <div class="section">
-          <h2>Primary target</h2>
-          <div class="target-grid" id="primaries"></div>
-        </div>
+          <section class="setup-group setup-group-finale">
+            <header class="setup-group-head">
+              <h3>Finale options</h3>
+              <p>Bonuses and host costs</p>
+            </header>
+            <div class="toggles">
+              <label class="switch-field" for="hardToggle">
+                <span class="switch-copy"><strong>Hard Mode</strong><small>+10% primary · Elite $100k each</small></span>
+                <input class="switch-input" id="hardToggle" type="checkbox" role="switch" />
+                <span class="switch-control" aria-hidden="true"><i class="switch-thumb"></i></span>
+              </label>
+              <label class="switch-field" for="repeatToggle">
+                <span class="switch-copy"><strong>Repeat bonus</strong><small>Boosts selected secondary loot</small></span>
+                <input class="switch-input" id="repeatToggle" type="checkbox" role="switch" />
+                <span class="switch-control" aria-hidden="true"><i class="switch-thumb"></i></span>
+              </label>
+              <label class="switch-field" for="setupToggle">
+                <span class="switch-copy"><strong>Setup cost</strong><small>Deduct $100,000 from host</small></span>
+                <input class="switch-input" id="setupToggle" type="checkbox" role="switch" />
+                <span class="switch-control" aria-hidden="true"><i class="switch-thumb"></i></span>
+              </label>
+            </div>
+          </section>
 
-        <div class="section">
-          <h2>Finale options</h2>
-          <div class="toggles">
-            <button class="toggle active" id="hardToggle" type="button">
-              <span>Hard Mode<small>+10% primary · Elite $100k each</small></span>
-              <em class="pill" id="hardPill">ON</em>
-            </button>
-            <button class="toggle active" id="repeatToggle" type="button">
-              <span>Repeat / secondary bonus<small>Tequila +20%, Necklace +10%, Bonds +5%</small></span>
-              <em class="pill" id="repeatPill">ON</em>
-            </button>
-            <button class="toggle active" id="setupToggle" type="button">
-              <span>Deduct $100,000 setup<small>Charged to the host only</small></span>
-              <em class="pill" id="setupPill">ON</em>
-            </button>
-          </div>
+          <section class="setup-group setup-group-loot">
+            <header class="setup-group-head">
+              <h3>Secondary loot</h3>
+              <p>Everything scoped on the island</p>
+            </header>
+            <div class="loot-list" id="lootList"></div>
+          </section>
         </div>
+      </section>
 
-        <div class="section">
-          <h2>Scouted secondary loot</h2>
-          <div class="loot-list" id="lootList"></div>
-        </div>
-      </aside>
-
-      <main>
+      <main aria-labelledby="resultsHeading">
         <section class="banner" id="banner"></section>
         <section class="players" id="players"></section>
         <section class="breakdown" id="breakdown"></section>
@@ -534,7 +1079,21 @@
 
   <script>
     const BAG = 24;
-    const COLORS = ["#d4af6a", "#3ecfb0", "#d4a0ff", "#5ee09a"];
+    const SHARE_LOOT_COLORS = {
+      gold: "oklch(0.87 0 0)",
+      coke: "oklch(0.556 0 0)",
+      weed: "oklch(0.439 0 0)",
+      painting: "oklch(0.371 0 0)",
+      cash: "oklch(0.269 0 0)"
+    };
+
+    const LOOT_ICONS = {
+      gold: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 8 2-4h6l2 4"/><path d="M5 8h14l2 5H3l2-5Z"/><path d="m7 13-2 5h14l-2-5"/></svg>`,
+      coke: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.5 7.5 4 7.5-4M12 11.5V21"/><path d="m8.5 5 7.5 4"/></svg>`,
+      weed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 15c-4.8 0-8-2.7-8-7 4.8 0 8 2.7 8 7Z"/><path d="M12 12c0-4.8 2.7-8 7-8 0 4.8-2.7 8-7 8Z"/><path d="M12 18c3.6 0 6-2 6-5.2-3.6 0-6 2-6 5.2Z"/></svg>`,
+      painting: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1.5"/><circle cx="9" cy="9" r="1.5"/><path d="m5.5 17 4.5-4 3 2.5 2.5-2 3 3.5"/></svg>`,
+      cash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 8.5H5.5v.5M18 15.5h.5V15"/></svg>`
+    };
 
     const PRIMARY = {
       tequila: { name: "Sinsimito Tequila", normal: 400000, hard: 440000, buff: 1.20 },
@@ -556,9 +1115,9 @@
     const SAFE = { min: 18000, max: 99000, avg: 58500 };
 
     const state = {
-      players: 2,
-      cuts: [85, 15, 15, 15],
-      primary: "diamond",
+      players: 4,
+      cuts: [55, 15, 15, 15],
+      primary: "tequila",
       hard: true,
       repeat: true,
       setup: true,
@@ -658,14 +1217,6 @@
       return state.cuts.slice(0, state.players);
     }
 
-    function cutsValid() {
-      const cuts = activeCuts();
-      const sum = cuts.reduce((a, b) => a + b, 0);
-      if (sum !== 100) return false;
-      if (state.players === 1) return cuts[0] === 100;
-      return cuts.every((c) => c >= 15 && c % 5 === 0);
-    }
-
     function compute() {
       const primary = PRIMARY[state.primary];
       const primaryValue = state.hard ? primary.hard : primary.normal;
@@ -699,59 +1250,44 @@
     }
 
     function renderControls() {
-      document.getElementById("playerSeg").innerHTML = [1, 2, 3, 4].map((n) =>
-        `<button type="button" class="${state.players === n ? "active" : ""}" data-players="${n}">${n}</button>`
+      document.getElementById("playerSeg").innerHTML = [4, 3, 2, 1].map((n) =>
+        `<button type="button" class="${state.players === n ? "active" : ""}" data-players="${n}" aria-pressed="${state.players === n}">${n}</button>`
       ).join("");
-
-      const cuts = activeCuts();
-      document.getElementById("cuts").innerHTML = cuts.map((cut, i) => `
-        <div class="cut-row">
-          <label>${i === 0 ? "Player 1 · Host" : "Player " + (i + 1)}</label>
-          <input type="number" min="${state.players === 1 ? 100 : 15}" max="${state.players === 1 ? 100 : 85}" step="5" value="${cut}" data-cut="${i}" ${state.players === 1 ? "disabled" : ""} />
-        </div>
-      `).join("");
-
-      document.getElementById("cutBar").innerHTML = cuts.map((cut, i) =>
-        `<span style="width:${cut}%;background:${COLORS[i]}"></span>`
-      ).join("");
-
-      document.getElementById("cutWarn").classList.toggle("show", !cutsValid());
 
       document.getElementById("primaries").innerHTML = Object.entries(PRIMARY).map(([id, p]) => {
         const val = state.hard ? p.hard : p.normal;
-        return `<button type="button" class="${state.primary === id ? "active" : ""}" data-primary="${id}">
+        return `<button type="button" class="${state.primary === id ? "active" : ""}" data-primary="${id}" aria-pressed="${state.primary === id}">
           <span class="name">${p.name}</span>
           <span class="val">${money(val)}${state.repeat && p.buff > 1 ? " · sec +" + Math.round((p.buff - 1) * 100) + "%" : ""}</span>
         </button>`;
       }).join("");
 
-      document.getElementById("hardToggle").classList.toggle("active", state.hard);
-      document.getElementById("hardPill").textContent = state.hard ? "ON" : "OFF";
-      document.getElementById("repeatToggle").classList.toggle("active", state.repeat);
-      document.getElementById("repeatPill").textContent = state.repeat ? "ON" : "OFF";
-      document.getElementById("setupToggle").classList.toggle("active", state.setup);
-      document.getElementById("setupPill").textContent = state.setup ? "ON" : "OFF";
+      document.getElementById("hardToggle").checked = state.hard;
+      document.getElementById("repeatToggle").checked = state.repeat;
+      document.getElementById("setupToggle").checked = state.setup;
 
+      const allBagsFull = planPickup().bags.every((bag) => bag.fill >= BAG);
       document.getElementById("lootList").innerHTML = ORDER.map((key) => {
         const item = LOOT[key];
         const locked = key === "gold" && state.players < 2;
         return `<div class="loot-row${locked ? " locked" : ""}">
           <div class="loot-meta">
-            <i class="swatch" style="background:${item.color}"></i>
+            <span class="loot-icon">${LOOT_ICONS[key]}</span>
             <div>
               <strong>${item.name}</strong>
               <em>${locked
-                ? "Locked · dual-keycard rooms need 2 players"
-                : `${Math.round((item.unit / BAG) * 1000) / 10}% bag · avg ${money(item.avg)}`}</em>
+                ? "<span>Locked</span><span>Needs 2 players</span>"
+                : `<span>Bag: <b>${Math.round((item.unit / BAG) * 1000) / 10}%</b></span><span>Avg: <b>${money(item.avg)}</b></span>`}</em>
             </div>
           </div>
-          <div class="stepper">
-            <button type="button" data-loot="${key}" data-delta="-1" ${locked ? "disabled" : ""}>−</button>
-            <input type="number" min="0" max="${item.max}" value="${state.loot[key]}" data-loot-input="${key}" ${locked ? "disabled" : ""} />
-            <button type="button" data-loot="${key}" data-delta="1" ${locked ? "disabled" : ""}>+</button>
+          <div class="stepper" role="group" aria-label="${item.name} quantity">
+            <button type="button" data-loot="${key}" data-delta="-1" aria-label="Decrease ${item.name}" ${locked ? "disabled" : ""}>−</button>
+            <input type="number" min="0" max="${item.max}" value="${state.loot[key]}" data-loot-input="${key}" aria-label="${item.name} quantity" ${locked ? "disabled" : ""} />
+            <button type="button" data-loot="${key}" data-delta="1" aria-label="Increase ${item.name}" ${locked || allBagsFull ? "disabled" : ""} ${allBagsFull && !locked ? 'title="All bags are full"' : ""}>+</button>
           </div>
         </div>`;
       }).join("");
+
     }
 
     function bagSegments(take) {
@@ -762,25 +1298,249 @@
       }).join("");
     }
 
+    function roundedPath(ctx, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + width, y, x + width, y + height, r);
+      ctx.arcTo(x + width, y + height, x, y + height, r);
+      ctx.arcTo(x, y + height, x, y, r);
+      ctx.arcTo(x, y, x + width, y, r);
+      ctx.closePath();
+    }
+
+    function drawRoundedRect(ctx, x, y, width, height, radius, fill, stroke) {
+      roundedPath(ctx, x, y, width, height, radius);
+      if (fill) {
+        ctx.fillStyle = fill;
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.stroke();
+      }
+    }
+
+    function fitCanvasText(ctx, text, maxWidth) {
+      if (ctx.measureText(text).width <= maxWidth) return text;
+      let fitted = text;
+      while (fitted.length && ctx.measureText(fitted + "…").width > maxWidth) {
+        fitted = fitted.slice(0, -1);
+      }
+      return fitted + "…";
+    }
+
+    function createResultsImage() {
+      const result = compute();
+      const crewNet = result.players.reduce((sum, player) => sum + player.net, 0);
+      const canvas = document.createElement("canvas");
+      canvas.width = 2400;
+      canvas.height = 1350;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(2, 2);
+
+      ctx.fillStyle = "oklch(0.145 0 0)";
+      ctx.fillRect(0, 0, 1200, 675);
+
+      ctx.fillStyle = "oklch(0.708 0 0)";
+      ctx.font = "700 14px Geist, sans-serif";
+      ctx.fillText("GTA V  |  CAYO PERICO", 42, 48);
+      ctx.fillStyle = "oklch(0.985 0 0)";
+      ctx.font = "800 36px Geist, sans-serif";
+      ctx.fillText("Heist results", 42, 88);
+      ctx.fillStyle = "oklch(0.708 0 0)";
+      ctx.font = "500 16px Geist, sans-serif";
+      ctx.fillText(
+        `${result.players.length} player${result.players.length > 1 ? "s" : ""} · ${PRIMARY[state.primary].name} · ${state.hard ? "Hard" : "Normal"} mode`,
+        42,
+        117
+      );
+
+      ctx.textAlign = "right";
+      ctx.fillStyle = "oklch(0.708 0 0)";
+      ctx.font = "700 13px Geist, sans-serif";
+      ctx.fillText("CREW PAYOUT", 1158, 48);
+      ctx.fillStyle = "oklch(0.985 0 0)";
+      ctx.font = "800 42px Geist, sans-serif";
+      ctx.fillText(money(crewNet), 1158, 91);
+      ctx.textAlign = "left";
+
+      const cardY = 145;
+      const cardHeight = 330;
+      const cardGap = 14;
+      const cardsWidth = 1116;
+      const cardWidth = (cardsWidth - cardGap * (result.players.length - 1)) / result.players.length;
+
+      result.players.forEach((player, index) => {
+        const x = 42 + index * (cardWidth + cardGap);
+        drawRoundedRect(ctx, x, cardY, cardWidth, cardHeight, 10, "oklch(0.205 0 0)", "oklch(1 0 0 / 10%)");
+
+        ctx.fillStyle = "oklch(0.985 0 0)";
+        ctx.font = "800 20px Geist, sans-serif";
+        ctx.fillText(fitCanvasText(ctx, `Player ${index + 1}${index === 0 ? " · Host" : ""}`, cardWidth - 100), x + 18, cardY + 34);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "oklch(0.985 0 0)";
+        ctx.font = "800 14px Geist, sans-serif";
+        ctx.fillText(`${player.cut}% cut`, x + cardWidth - 18, cardY + 33);
+        ctx.textAlign = "left";
+
+        ctx.fillStyle = "oklch(0.708 0 0)";
+        ctx.font = "700 12px Geist, sans-serif";
+        ctx.fillText("LOOT BAG", x + 18, cardY + 67);
+        ctx.textAlign = "right";
+        ctx.fillText(`${Math.round((player.bag.fill / BAG) * 100)}%`, x + cardWidth - 18, cardY + 67);
+        ctx.textAlign = "left";
+
+        const trackX = x + 18;
+        const trackY = cardY + 77;
+        const trackWidth = cardWidth - 36;
+        drawRoundedRect(ctx, trackX, trackY, trackWidth, 14, 7, "oklch(0.145 0 0)");
+        ctx.save();
+        roundedPath(ctx, trackX, trackY, trackWidth, 14, 7);
+        ctx.clip();
+        let segmentX = trackX;
+        ORDER.forEach((key) => {
+          const units = key === "painting" ? player.bag.take.painting * 12 : player.bag.take[key];
+          if (!units) return;
+          const segmentWidth = trackWidth * (units / BAG);
+          ctx.fillStyle = SHARE_LOOT_COLORS[key];
+          ctx.fillRect(segmentX, trackY, segmentWidth, 14);
+          segmentX += segmentWidth;
+        });
+        ctx.restore();
+
+        const picks = ORDER.filter((key) => player.bag.take[key] > 0);
+        ctx.font = "700 14px Geist, sans-serif";
+        picks.forEach((key, pickIndex) => {
+          const units = key === "painting" ? player.bag.take.painting * 12 : player.bag.take[key];
+          const quantity = key === "painting"
+            ? player.bag.take.painting
+            : Number(stacksFromUnits(key, units).toFixed(2));
+          const label = key === "painting"
+            ? `${quantity} painting${quantity === 1 ? "" : "s"}`
+            : `${quantity}× ${LOOT[key].name}`;
+          const lineY = cardY + 126 + pickIndex * 27;
+          ctx.fillStyle = SHARE_LOOT_COLORS[key];
+          ctx.fillRect(x + 18, lineY - 9, 8, 8);
+          ctx.fillStyle = "oklch(0.985 0 0)";
+          ctx.fillText(fitCanvasText(ctx, label, cardWidth - 54), x + 36, lineY);
+        });
+
+        ctx.fillStyle = "oklch(0.708 0 0)";
+        ctx.font = "700 11px Geist, sans-serif";
+        ctx.fillText("PAYOUT", x + 18, cardY + cardHeight - 55);
+        ctx.fillStyle = "oklch(0.985 0 0)";
+        ctx.font = `${cardWidth < 300 ? 26 : 30}px Geist, sans-serif`;
+        ctx.fillText(money(player.net), x + 18, cardY + cardHeight - 20);
+      });
+
+      const feeTotal = result.fenceFee + result.pavelFee;
+      const stats = [
+        ["PRIMARY", money(result.primaryValue)],
+        ["SECONDARY", money(result.secondary)],
+        ["FEES", "−" + money(feeTotal)],
+        ["OFFICE SAFE", "+" + money(SAFE.avg)],
+        ["DISTRIBUTABLE", money(result.distributable)],
+        ["ELITE / PLAYER", result.eliteEach ? money(result.eliteEach) : "Not earned"]
+      ];
+      const statY = 503;
+      const statGap = 10;
+      const statWidth = (1116 - statGap * (stats.length - 1)) / stats.length;
+      stats.forEach(([label, value], index) => {
+        const x = 42 + index * (statWidth + statGap);
+        drawRoundedRect(ctx, x, statY, statWidth, 105, 10, "oklch(0.205 0 0)", "oklch(1 0 0 / 10%)");
+        ctx.fillStyle = "oklch(0.708 0 0)";
+        ctx.font = "700 11px Geist, sans-serif";
+        ctx.fillText(label, x + 13, statY + 31);
+        ctx.fillStyle = "oklch(0.985 0 0)";
+        ctx.font = "800 18px Geist, sans-serif";
+        ctx.fillText(fitCanvasText(ctx, value, statWidth - 26), x + 13, statY + 67);
+      });
+
+      ctx.fillStyle = "oklch(0.708 0 0)";
+      ctx.font = "600 12px Geist, sans-serif";
+      ctx.fillText("Generated at gta.panas.dev", 42, 647);
+      ctx.textAlign = "right";
+      ctx.fillText("Cayo Perico payout planner", 1158, 647);
+      ctx.textAlign = "left";
+
+      return canvas;
+    }
+
+    async function copyResultsImage(button) {
+      const resetButton = () => {
+        button.disabled = false;
+        button.classList.remove("copied", "failed");
+        button.textContent = "Copy results image";
+      };
+
+      if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+        button.classList.add("failed");
+        button.textContent = "Image copy unsupported";
+        setTimeout(resetButton, 2500);
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Copying…";
+
+      try {
+        const canvas = createResultsImage();
+        const blobPromise = new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Could not create the results image."));
+          }, "image/png");
+        });
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blobPromise })
+        ]);
+        button.classList.add("copied");
+        button.textContent = "Copied!";
+      } catch (error) {
+        console.error(error);
+        button.classList.add("failed");
+        button.textContent = "Copy blocked";
+      }
+
+      setTimeout(resetButton, 2500);
+    }
+
     function renderResults() {
       const result = compute();
       const crewNet = result.players.reduce((s, p) => s + p.net, 0);
       const banner = document.getElementById("banner");
       banner.className = "banner" + (result.allFull ? "" : " bad");
       banner.innerHTML = `
-        <div>
-          <h3>${result.allFull ? "Full bags · Elite Challenge ready" : "Bags not full · Elite not available"}</h3>
-          <p>${state.players} player${state.players > 1 ? "s" : ""} · ${PRIMARY[state.primary].name}${state.hard ? " · Hard" : " · Normal"} · secondary ×${result.buff.toFixed(2)}</p>
+        <div class="banner-copy">
+          <button class="copy-results" type="button" data-copy-results>Copy results image</button>
         </div>
-        <div class="total-cash">${money(crewNet)}</div>
+        <div class="banner-summary">
+          <div>
+            <span class="result-kicker" id="resultsHeading">Heist results</span>
+            <h3>${result.allFull ? "Full bags · Elite Challenge ready" : "Bags not full · Elite not available"}</h3>
+            <p>${state.players} player${state.players > 1 ? "s" : ""} · ${PRIMARY[state.primary].name}${state.hard ? " · Hard" : " · Normal"} · secondary ×${result.buff.toFixed(2)}</p>
+          </div>
+          <div class="banner-actions">
+            <span class="total-label">Crew payout</span>
+            <div class="total-cash">${money(crewNet)}</div>
+          </div>
+        </div>
       `;
 
       document.getElementById("players").innerHTML = result.players.map((p) => {
         const picks = ORDER.filter((key) => p.bag.take[key] > 0).map((key) => {
           const units = key === "painting" ? p.bag.take.painting * 12 : p.bag.take[key];
+          const quantity = key === "painting"
+            ? p.bag.take.painting
+            : Number(stacksFromUnits(key, units).toFixed(2));
+          const label = key === "painting"
+            ? `painting${quantity === 1 ? "" : "s"}`
+            : `stack${quantity === 1 ? "" : "s"} of ${LOOT[key].name.toLowerCase()}`;
           return `<div class="pick">
-            <span class="qty">${key === "painting" ? p.bag.take.painting : Number(stacksFromUnits(key, units).toFixed(2))}</span>
-            <span class="kind">${formatStacks(key, units)}</span>
+            <span class="pick-icon">${LOOT_ICONS[key]}</span>
+            <span class="qty">${quantity}</span>
+            <span class="kind">${label}</span>
             <span class="fill">${Math.round((units / BAG) * 1000) / 10}% bag</span>
           </div>`;
         }).join("") || `<div class="empty-pick">Nothing secondary — bag stays empty.</div>`;
@@ -791,11 +1551,17 @@
 
         return `<article class="player-card">
           <div class="player-top">
-            <div>
+            <div class="player-heading">
               <h3>Player ${p.index + 1}${p.index === 0 ? " · Host" : ""}</h3>
-              <div class="cut">${p.cut}% cut</div>
+              <span class="badge ${p.bag.fill >= BAG ? "yes" : "no"}">${p.bag.fill >= BAG ? "Full bag" : Math.round((p.bag.fill / BAG) * 100) + "% bag"}</span>
             </div>
-            <span class="badge ${p.bag.fill >= BAG ? "yes" : "no"}">${p.bag.fill >= BAG ? "Full bag" : Math.round((p.bag.fill / BAG) * 100) + "% bag"}</span>
+            <label class="card-cut">
+              <span>Player cut</span>
+              <span class="cut-input">
+                <input type="number" min="${state.players === 1 ? 100 : 15}" max="${state.players === 1 ? 100 : 85}" step="5" value="${p.cut}" data-cut="${p.index}" ${state.players === 1 ? "disabled" : ""} aria-label="Player ${p.index + 1} cut percentage" />
+                <em>%</em>
+              </span>
+            </label>
           </div>
           <div class="bag">
             <div class="bag-label"><span>Loot bag</span><span>${p.bag.fill}/24</span></div>
@@ -804,6 +1570,7 @@
           ${splitNote}
           <div class="picks">${picks}</div>
           <div class="pay">
+            <span class="pay-label">Payout</span>
             <div class="net">${money(p.net)}</div>
             <ul>
               <li><span>Share of take</span><strong>${money(p.fromTake)}</strong></li>
@@ -821,8 +1588,7 @@
         ["Fencing 10%", "−" + money(result.fenceFee)],
         ["Pavel 2%", "−" + money(result.pavelFee)],
         ["Distributable", money(result.distributable)],
-        ["Elite / player", result.eliteEach ? money(result.eliteEach) : "Not earned"],
-        ["Crew after cuts", money(crewNet)]
+        ["Elite / player", result.eliteEach ? money(result.eliteEach) : "Not earned"]
       ].map(([k, v]) => `<div class="stat"><span>${k}</span><strong>${v}</strong></div>`).join("");
 
       const leftBits = ORDER.filter((key) => result.leftover[key] > 0).map((key) => {
@@ -880,7 +1646,27 @@
       for (let i = 0; i < 4; i++) state.cuts[i] = cuts[i] ?? 15;
     }
 
+    function setTheme(theme, persist = true) {
+      document.documentElement.dataset.theme = theme;
+      const nextTheme = theme === "dark" ? "light" : "dark";
+      const themeToggle = document.getElementById("themeToggle");
+      themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+      themeToggle.title = `Switch to ${nextTheme} theme`;
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#121212" : "#ffffff";
+      if (persist) {
+        try { localStorage.setItem("gta-calculator-theme", theme); } catch (_) {}
+      }
+    }
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+    });
+
+    setTheme(document.documentElement.dataset.theme, false);
+
     document.querySelector(".wrap").addEventListener("click", (e) => {
+      const copyBtn = e.target.closest("[data-copy-results]");
+      if (copyBtn) { copyResultsImage(copyBtn); return; }
       const pBtn = e.target.closest("[data-players]");
       if (pBtn) { setPlayerCount(Number(pBtn.dataset.players)); render(); return; }
       const prim = e.target.closest("[data-primary]");
