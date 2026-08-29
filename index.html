@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Plan Cayo Perico heist payouts, loot bags, crew cuts, fees, and Elite Challenge bonuses." />
+  <meta name="theme-color" content="#07110d" />
+  <title>Cayo Perico Payout Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07110d;
+      --bg-2: #0c1a14;
+      --panel: #10211a;
+      --panel-2: #163027;
+      --line: rgba(212, 175, 106, 0.22);
+      --line-strong: rgba(212, 175, 106, 0.45);
+      --gold: #d4af6a;
+      --gold-2: #f0d9a0;
+      --cream: #f3ead8;
+      --muted: #9bb0a6;
+      --lagoon: #3ecfb0;
+      --danger: #e35d6a;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      --gold-loot: #e3c36a;
+      --coke-loot: #e8e6e1;
+      --weed-loot: #8fd16a;
+      --paint-loot: #d4a0ff;
+      --cash-loot: #5ee09a;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: Manrope, system-ui, sans-serif;
+      color: var(--cream);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(62, 207, 176, 0.12), transparent 50%),
+        radial-gradient(900px 500px at 110% 10%, rgba(212, 175, 106, 0.14), transparent 45%),
+        linear-gradient(180deg, #0a1712 0%, var(--bg) 40%, #050c0a 100%);
+    }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    header.hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    h1 {
+      font-family: Syne, sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 0.95;
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 52ch;
+    }
+
+    .patch {
+      flex-shrink: 0;
+      border: 1px solid var(--line);
+      background: rgba(16, 33, 26, 0.8);
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .patch strong { display: block; color: var(--gold-2); font-size: 13px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(22, 48, 39, 0.9), rgba(16, 33, 26, 0.92));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .controls { position: sticky; top: 16px; }
+
+    h2 {
+      font-family: Syne, sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+      color: var(--gold-2);
+    }
+
+    .section { margin-bottom: 18px; }
+    .section:last-child { margin-bottom: 0; }
+
+    .seg {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .seg button, .target-grid button, .stepper button, .toggle {
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--bg-2);
+      color: var(--cream);
+    }
+
+    .seg button {
+      height: 44px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .seg button.active, .target-grid button.active, .toggle.active {
+      background: linear-gradient(180deg, #3a2d16, #2a210f);
+      border-color: var(--line-strong);
+      color: var(--gold-2);
+      box-shadow: inset 0 0 0 1px rgba(212, 175, 106, 0.2);
+    }
+
+    .target-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .target-grid button {
+      text-align: left;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .target-grid .name { display: block; font-weight: 700; }
+    .target-grid .val { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .target-grid button.active .val { color: var(--gold); }
+
+    .toggles { display: grid; gap: 8px; }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      border-radius: 14px;
+      padding: 11px 12px;
+      text-align: left;
+    }
+
+    .toggle span { font-weight: 650; }
+    .toggle small { display: block; color: var(--muted); font-weight: 500; margin-top: 2px; }
+    .pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .toggle.active .pill { color: var(--bg); background: var(--gold); border-color: var(--gold); }
+
+    .loot-list { display: grid; gap: 8px; }
+
+    .loot-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 8px 8px 8px 12px;
+    }
+
+    .loot-meta { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .swatch {
+      width: 10px;
+      height: 28px;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+    .loot-meta strong { display: block; font-size: 14px; }
+    .loot-meta em { display: block; font-style: normal; color: var(--muted); font-size: 11px; }
+
+    .loot-row.locked {
+      opacity: 0.55;
+      outline: 1px dashed rgba(227, 93, 106, 0.35);
+    }
+    .loot-row.locked .stepper button,
+    .loot-row.locked .stepper input {
+      pointer-events: none;
+      color: var(--muted);
+    }
+
+    .stepper { display: flex; align-items: center; gap: 4px; }
+    .stepper button {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .stepper input {
+      width: 52px;
+      height: 36px;
+      border: 0;
+      background: transparent;
+      color: var(--cream);
+      font: 700 16px/1 Manrope, sans-serif;
+      text-align: center;
+    }
+
+    .cuts { display: grid; gap: 8px; }
+    .cut-row {
+      display: grid;
+      grid-template-columns: 1fr 72px;
+      gap: 8px;
+      align-items: center;
+    }
+    .cut-row label { color: var(--muted); font-size: 13px; font-weight: 600; }
+    .cut-row input {
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--bg-2);
+      color: var(--gold-2);
+      text-align: center;
+      font: 700 14px Manrope, sans-serif;
+    }
+    .cut-bar {
+      height: 10px;
+      display: flex;
+      border-radius: 99px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      margin-top: 8px;
+    }
+    .cut-bar span { display: block; height: 100%; }
+    .warn {
+      color: var(--danger);
+      font-size: 12px;
+      margin: 8px 0 0;
+      display: none;
+    }
+    .warn.show { display: block; }
+
+    .banner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(62, 207, 176, 0.12), rgba(212, 175, 106, 0.08));
+      margin-bottom: 14px;
+    }
+
+    .banner.bad {
+      border-color: rgba(227, 93, 106, 0.45);
+      background: rgba(227, 93, 106, 0.08);
+    }
+
+    .banner h3 { margin: 0; font-family: Syne, sans-serif; font-size: 20px; }
+    .banner p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .total-cash {
+      font-family: Syne, sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      color: var(--gold-2);
+    }
+
+    .players {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .player-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      min-height: 100%;
+    }
+
+    .player-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .player-top h3 { margin: 0; font-size: 18px; }
+    .player-top .cut { color: var(--gold); font-weight: 800; font-size: 13px; }
+
+    .bag { margin: 0 0 14px; }
+    .bag-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .bag-track {
+      height: 16px;
+      border-radius: 99px;
+      background: #08140f;
+      border: 1px solid var(--line);
+      display: flex;
+      overflow: hidden;
+    }
+    .bag-track i { display: block; height: 100%; }
+
+    .picks { display: grid; gap: 8px; margin: 0 0 14px; }
+    .pick {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-2);
+      border-radius: 12px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+    }
+    .pick .qty { font-weight: 800; min-width: 3.2em; color: var(--gold-2); }
+    .pick .kind { flex: 1; font-weight: 650; }
+    .pick .fill { color: var(--muted); font-size: 12px; }
+    .empty-pick { color: var(--muted); font-size: 13px; padding: 8px 2px; }
+
+    .share-note {
+      font-size: 12px;
+      color: var(--gold);
+      background: rgba(212, 175, 106, 0.08);
+      border: 1px dashed var(--line-strong);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 12px;
+    }
+
+    .pay { border-top: 1px solid var(--line); padding-top: 12px; }
+    .pay .net { font-family: Syne, sans-serif; font-size: 28px; color: var(--gold-2); }
+    .pay ul {
+      list-style: none;
+      margin: 8px 0 0;
+      padding: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .pay li { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 8px;
+      border-radius: 999px;
+    }
+    .badge.yes { background: rgba(62, 207, 176, 0.16); color: var(--lagoon); }
+    .badge.no { background: rgba(227, 93, 106, 0.12); color: var(--danger); }
+
+    .breakdown {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .stat span { display: block; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .stat strong { display: block; margin-top: 4px; font-size: 16px; }
+
+    .left-on { margin-top: 12px; color: var(--muted); font-size: 13px; }
+
+    footer.note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; }
+      .controls { position: static; }
+      header.hero { flex-direction: column; align-items: flex-start; }
+      .patch { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <p class="kicker">GTA Online · Cayo Perico</p>
+        <h1>Heist payout planner</h1>
+        <p>Enter what you scoped on the island. The planner fills every bag with the highest-value mix, splits gold tables when it helps, and shows each player’s take after cuts, fees, and Elite. Solo crews skip gold — those compound rooms need two players.</p>
+      </div>
+      <div class="patch">
+        <strong>August 2026 values</strong>
+        After Title Update 1.73 (14 Jul 2026)
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="panel controls">
+        <div class="section">
+          <h2>Crew</h2>
+          <div class="seg" id="playerSeg"></div>
+        </div>
+
+        <div class="section">
+          <h2>Cuts</h2>
+          <div class="cuts" id="cuts"></div>
+          <div class="cut-bar" id="cutBar"></div>
+          <p class="warn" id="cutWarn">Cuts must add up to 100%. Extra players need at least 15% each.</p>
+        </div>
+
+        <div class="section">
+          <h2>Primary target</h2>
+          <div class="target-grid" id="primaries"></div>
+        </div>
+
+        <div class="section">
+          <h2>Finale options</h2>
+          <div class="toggles">
+            <button class="toggle active" id="hardToggle" type="button">
+              <span>Hard Mode<small>+10% primary · Elite $100k each</small></span>
+              <em class="pill" id="hardPill">ON</em>
+            </button>
+            <button class="toggle active" id="repeatToggle" type="button">
+              <span>Repeat / secondary bonus<small>Tequila +20%, Necklace +10%, Bonds +5%</small></span>
+              <em class="pill" id="repeatPill">ON</em>
+            </button>
+            <button class="toggle active" id="setupToggle" type="button">
+              <span>Deduct $100,000 setup<small>Charged to the host only</small></span>
+              <em class="pill" id="setupPill">ON</em>
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Scouted secondary loot</h2>
+          <div class="loot-list" id="lootList"></div>
+        </div>
+      </aside>
+
+      <main>
+        <section class="banner" id="banner"></section>
+        <section class="players" id="players"></section>
+        <section class="breakdown" id="breakdown"></section>
+        <p class="left-on" id="leftover"></p>
+        <footer class="note">
+          Secondary stack values are averages of the current in-game ranges after the 1.73 nerf.
+          Gold is 66.7% of a bag per stack, only appears in dual-keycard compound rooms (so solo cannot take it), and can be looted by two players from the same table.
+          Paintings are 50% and cannot be split. Elite Challenge also requires a sub-15:00 finale and no failed fingerprint hacks.
+          Distributable take = (primary + secondary) × 0.88 + office safe average. The safe does not use bag space and is not fenced. Elite is paid per player after the split and is not taxed.
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const BAG = 24;
+    const COLORS = ["#d4af6a", "#3ecfb0", "#d4a0ff", "#5ee09a"];
+
+    const PRIMARY = {
+      tequila: { name: "Sinsimito Tequila", normal: 400000, hard: 440000, buff: 1.20 },
+      necklace: { name: "Ruby Necklace", normal: 560000, hard: 616000, buff: 1.10 },
+      bonds: { name: "Bearer Bonds", normal: 616000, hard: 677600, buff: 1.05 },
+      diamond: { name: "Pink Diamond", normal: 910000, hard: 1001000, buff: 1.00 },
+      panther: { name: "Panther Statue", normal: 1900000, hard: 2090000, buff: 1.00 }
+    };
+
+    const LOOT = {
+      gold: { name: "Gold", unit: 16, avg: 297750, range: "295,500–300,000", color: "var(--gold-loot)", max: 12 },
+      coke: { name: "Cocaine", unit: 12, avg: 180225, range: "178,200–182,250", color: "var(--coke-loot)", max: 12 },
+      weed: { name: "Weed", unit: 9, avg: 119475, range: "117,450–121,500", color: "var(--weed-loot)", max: 12 },
+      painting: { name: "Paintings", unit: 12, avg: 151875, range: "141,750–162,000", color: "var(--paint-loot)", max: 8, whole: true },
+      cash: { name: "Cash", unit: 6, avg: 72900, range: "70,875–74,925", color: "var(--cash-loot)", max: 16 }
+    };
+
+    const ORDER = ["gold", "coke", "weed", "painting", "cash"];
+    const SAFE = { min: 18000, max: 99000, avg: 58500 };
+
+    const state = {
+      players: 2,
+      cuts: [85, 15, 15, 15],
+      primary: "diamond",
+      hard: true,
+      repeat: true,
+      setup: true,
+      loot: { gold: 3, coke: 0, weed: 0, painting: 1, cash: 2 }
+    };
+
+    const money = (n) => "$" + Math.round(n).toLocaleString("en-US");
+    const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+
+    function stacksFromUnits(key, units) {
+      return units / LOOT[key].unit;
+    }
+
+    function formatStacks(key, units) {
+      const s = stacksFromUnits(key, units);
+      const rounded = Math.round(s * 100) / 100;
+      if (key === "painting") {
+        return rounded === 1 ? "1 painting" : `${rounded} paintings`;
+      }
+      if (rounded === 1) return `1 stack of ${LOOT[key].name.toLowerCase()}`;
+      return `${Number(rounded.toFixed(2))} stacks of ${LOOT[key].name.toLowerCase()}`;
+    }
+
+    function lootValue(key, units, buff) {
+      return stacksFromUnits(key, units) * LOOT[key].avg * buff;
+    }
+
+    function niceness(take) {
+      let score = 0;
+      if (take.gold % 8 === 0) score += 8;
+      if (take.coke % 12 === 0) score += 6;
+      if (take.weed % 9 === 0) score += 5;
+      if (take.cash % 6 === 0) score += 4;
+      if (take.painting === 0 || take.painting === 1 || take.painting === 2) score += 3;
+      const kinds = ORDER.filter((k) => take[k] > 0).length;
+      score += (5 - kinds) * 2;
+      return score;
+    }
+
+    function bestBag(inv) {
+      let best = null;
+      const maxPaint = Math.min(2, inv.painting);
+      for (let p = 0; p <= maxPaint; p++) {
+        const paintU = p * 12;
+        const maxG = Math.min(inv.gold, BAG - paintU);
+        for (let g = 0; g <= maxG; g++) {
+          const maxC = Math.min(inv.coke, BAG - paintU - g);
+          for (let c = 0; c <= maxC; c++) {
+            const maxW = Math.min(inv.weed, BAG - paintU - g - c);
+            for (let w = 0; w <= maxW; w++) {
+              const used = paintU + g + c + w;
+              const cash = Math.min(inv.cash, BAG - used);
+              const take = { gold: g, coke: c, weed: w, painting: p, cash };
+              const fill = used + cash;
+              const value =
+                (g / 16) * LOOT.gold.avg +
+                (c / 12) * LOOT.coke.avg +
+                (w / 9) * LOOT.weed.avg +
+                p * LOOT.painting.avg +
+                (cash / 6) * LOOT.cash.avg;
+              const nice = niceness(take);
+              const rank = value * 1e6 + fill * 1e3 + nice;
+              if (!best || rank > best.rank + 1e-6) {
+                best = { take, fill, value, rank };
+              }
+            }
+          }
+        }
+      }
+      return best || { take: { gold: 0, coke: 0, weed: 0, painting: 0, cash: 0 }, fill: 0, value: 0 };
+    }
+
+    function planPickup() {
+      const goldLocked = state.players < 2;
+      const inv = {
+        gold: goldLocked ? 0 : Math.round(state.loot.gold * LOOT.gold.unit),
+        coke: Math.round(state.loot.coke * LOOT.coke.unit),
+        weed: Math.round(state.loot.weed * LOOT.weed.unit),
+        painting: state.loot.painting,
+        cash: Math.round(state.loot.cash * LOOT.cash.unit)
+      };
+      const bags = [];
+      for (let i = 0; i < state.players; i++) {
+        const choice = bestBag(inv);
+        bags.push(choice);
+        inv.gold -= choice.take.gold;
+        inv.coke -= choice.take.coke;
+        inv.weed -= choice.take.weed;
+        inv.painting -= choice.take.painting;
+        inv.cash -= choice.take.cash;
+      }
+      if (goldLocked) inv.gold = Math.round(state.loot.gold * LOOT.gold.unit);
+      return { bags, leftover: inv, goldLocked };
+    }
+
+    function activeCuts() {
+      return state.cuts.slice(0, state.players);
+    }
+
+    function cutsValid() {
+      const cuts = activeCuts();
+      const sum = cuts.reduce((a, b) => a + b, 0);
+      if (sum !== 100) return false;
+      if (state.players === 1) return cuts[0] === 100;
+      return cuts.every((c) => c >= 15 && c % 5 === 0);
+    }
+
+    function compute() {
+      const primary = PRIMARY[state.primary];
+      const primaryValue = state.hard ? primary.hard : primary.normal;
+      const buff = state.repeat ? primary.buff : 1;
+      const { bags, leftover, goldLocked } = planPickup();
+      const secondary = bags.reduce((sum, bag) => {
+        return sum + ORDER.reduce((s, key) => {
+          const amount = key === "painting" ? bag.take.painting * LOOT.painting.unit : bag.take[key];
+          return s + lootValue(key, amount, buff);
+        }, 0);
+      }, 0);
+      const allFull = bags.every((b) => b.fill >= BAG);
+      const eliteEach = allFull ? (state.hard ? 100000 : 50000) : 0;
+      const fenced = (primaryValue + secondary) * 0.88;
+      const distributable = fenced + SAFE.avg;
+      const cuts = activeCuts();
+      const players = bags.map((bag, i) => {
+        const cut = cuts[i] || 0;
+        const fromTake = distributable * (cut / 100);
+        const setup = state.setup && i === 0 ? 100000 : 0;
+        const net = fromTake + eliteEach - setup;
+        return { index: i, bag, cut, fromTake, elite: eliteEach, setup, net };
+      });
+      const goldSplit = players.filter((p) => p.bag.take.gold % 16 !== 0);
+      return {
+        primaryValue, secondary, buff, leftover, goldLocked, allFull, eliteEach,
+        fenced, distributable, players, goldSplit,
+        fenceFee: (primaryValue + secondary) * 0.10,
+        pavelFee: (primaryValue + secondary) * 0.02
+      };
+    }
+
+    function renderControls() {
+      document.getElementById("playerSeg").innerHTML = [1, 2, 3, 4].map((n) =>
+        `<button type="button" class="${state.players === n ? "active" : ""}" data-players="${n}">${n}</button>`
+      ).join("");
+
+      const cuts = activeCuts();
+      document.getElementById("cuts").innerHTML = cuts.map((cut, i) => `
+        <div class="cut-row">
+          <label>${i === 0 ? "Player 1 · Host" : "Player " + (i + 1)}</label>
+          <input type="number" min="${state.players === 1 ? 100 : 15}" max="${state.players === 1 ? 100 : 85}" step="5" value="${cut}" data-cut="${i}" ${state.players === 1 ? "disabled" : ""} />
+        </div>
+      `).join("");
+
+      document.getElementById("cutBar").innerHTML = cuts.map((cut, i) =>
+        `<span style="width:${cut}%;background:${COLORS[i]}"></span>`
+      ).join("");
+
+      document.getElementById("cutWarn").classList.toggle("show", !cutsValid());
+
+      document.getElementById("primaries").innerHTML = Object.entries(PRIMARY).map(([id, p]) => {
+        const val = state.hard ? p.hard : p.normal;
+        return `<button type="button" class="${state.primary === id ? "active" : ""}" data-primary="${id}">
+          <span class="name">${p.name}</span>
+          <span class="val">${money(val)}${state.repeat && p.buff > 1 ? " · sec +" + Math.round((p.buff - 1) * 100) + "%" : ""}</span>
+        </button>`;
+      }).join("");
+
+      document.getElementById("hardToggle").classList.toggle("active", state.hard);
+      document.getElementById("hardPill").textContent = state.hard ? "ON" : "OFF";
+      document.getElementById("repeatToggle").classList.toggle("active", state.repeat);
+      document.getElementById("repeatPill").textContent = state.repeat ? "ON" : "OFF";
+      document.getElementById("setupToggle").classList.toggle("active", state.setup);
+      document.getElementById("setupPill").textContent = state.setup ? "ON" : "OFF";
+
+      document.getElementById("lootList").innerHTML = ORDER.map((key) => {
+        const item = LOOT[key];
+        const locked = key === "gold" && state.players < 2;
+        return `<div class="loot-row${locked ? " locked" : ""}">
+          <div class="loot-meta">
+            <i class="swatch" style="background:${item.color}"></i>
+            <div>
+              <strong>${item.name}</strong>
+              <em>${locked
+                ? "Locked · dual-keycard rooms need 2 players"
+                : `${Math.round((item.unit / BAG) * 1000) / 10}% bag · avg ${money(item.avg)}`}</em>
+            </div>
+          </div>
+          <div class="stepper">
+            <button type="button" data-loot="${key}" data-delta="-1" ${locked ? "disabled" : ""}>−</button>
+            <input type="number" min="0" max="${item.max}" value="${state.loot[key]}" data-loot-input="${key}" ${locked ? "disabled" : ""} />
+            <button type="button" data-loot="${key}" data-delta="1" ${locked ? "disabled" : ""}>+</button>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    function bagSegments(take) {
+      return ORDER.map((key) => {
+        const units = key === "painting" ? take.painting * 12 : take[key];
+        if (!units) return "";
+        return `<i style="width:${(units / BAG) * 100}%;background:${LOOT[key].color}"></i>`;
+      }).join("");
+    }
+
+    function renderResults() {
+      const result = compute();
+      const crewNet = result.players.reduce((s, p) => s + p.net, 0);
+      const banner = document.getElementById("banner");
+      banner.className = "banner" + (result.allFull ? "" : " bad");
+      banner.innerHTML = `
+        <div>
+          <h3>${result.allFull ? "Full bags · Elite Challenge ready" : "Bags not full · Elite not available"}</h3>
+          <p>${state.players} player${state.players > 1 ? "s" : ""} · ${PRIMARY[state.primary].name}${state.hard ? " · Hard" : " · Normal"} · secondary ×${result.buff.toFixed(2)}</p>
+        </div>
+        <div class="total-cash">${money(crewNet)}</div>
+      `;
+
+      document.getElementById("players").innerHTML = result.players.map((p) => {
+        const picks = ORDER.filter((key) => p.bag.take[key] > 0).map((key) => {
+          const units = key === "painting" ? p.bag.take.painting * 12 : p.bag.take[key];
+          return `<div class="pick">
+            <span class="qty">${key === "painting" ? p.bag.take.painting : Number(stacksFromUnits(key, units).toFixed(2))}</span>
+            <span class="kind">${formatStacks(key, units)}</span>
+            <span class="fill">${Math.round((units / BAG) * 1000) / 10}% bag</span>
+          </div>`;
+        }).join("") || `<div class="empty-pick">Nothing secondary — bag stays empty.</div>`;
+
+        const splitNote = p.bag.take.gold % 16 !== 0
+          ? `<div class="share-note">Take ${formatStacks("gold", p.bag.take.gold)} — loot a gold table with a teammate so you each grab a half stack.</div>`
+          : "";
+
+        return `<article class="player-card">
+          <div class="player-top">
+            <div>
+              <h3>Player ${p.index + 1}${p.index === 0 ? " · Host" : ""}</h3>
+              <div class="cut">${p.cut}% cut</div>
+            </div>
+            <span class="badge ${p.bag.fill >= BAG ? "yes" : "no"}">${p.bag.fill >= BAG ? "Full bag" : Math.round((p.bag.fill / BAG) * 100) + "% bag"}</span>
+          </div>
+          <div class="bag">
+            <div class="bag-label"><span>Loot bag</span><span>${p.bag.fill}/24</span></div>
+            <div class="bag-track">${bagSegments(p.bag.take)}</div>
+          </div>
+          ${splitNote}
+          <div class="picks">${picks}</div>
+          <div class="pay">
+            <div class="net">${money(p.net)}</div>
+            <ul>
+              <li><span>Share of take</span><strong>${money(p.fromTake)}</strong></li>
+              <li><span>Elite Challenge</span><strong>${p.elite ? "+" + money(p.elite) : "—"}</strong></li>
+              ${p.setup ? `<li><span>Setup fee</span><strong>−${money(p.setup)}</strong></li>` : ""}
+            </ul>
+          </div>
+        </article>`;
+      }).join("");
+
+      document.getElementById("breakdown").innerHTML = [
+        ["Primary", money(result.primaryValue)],
+        ["Secondary", money(result.secondary)],
+        ["Office safe", `+${money(SAFE.avg)} (${money(SAFE.min)} - ${money(SAFE.max)})`],
+        ["Fencing 10%", "−" + money(result.fenceFee)],
+        ["Pavel 2%", "−" + money(result.pavelFee)],
+        ["Distributable", money(result.distributable)],
+        ["Elite / player", result.eliteEach ? money(result.eliteEach) : "Not earned"],
+        ["Crew after cuts", money(crewNet)]
+      ].map(([k, v]) => `<div class="stat"><span>${k}</span><strong>${v}</strong></div>`).join("");
+
+      const leftBits = ORDER.filter((key) => result.leftover[key] > 0).map((key) => {
+        const units = key === "painting" ? result.leftover.painting * 12 : result.leftover[key];
+        if (key === "gold" && result.goldLocked) {
+          return formatStacks(key, units) + " (locked in dual-keycard rooms)";
+        }
+        return formatStacks(key, units);
+      });
+      document.getElementById("leftover").textContent = leftBits.length
+        ? "Left on the island: " + leftBits.join(", ") + "."
+        : "Every scoped stack that fits in the bags is assigned.";
+    }
+
+    function render() {
+      renderControls();
+      renderResults();
+    }
+
+    function setPlayerCount(n) {
+      state.players = n;
+      if (n === 1) state.cuts = [100, 15, 15, 15];
+      else {
+        const others = Array.from({ length: n - 1 }, () => 15);
+        state.cuts = [100 - 15 * (n - 1), ...others, 15, 15, 15].slice(0, 4);
+      }
+    }
+
+    function setCut(index, value) {
+      if (state.players === 1) return;
+      const cuts = activeCuts();
+      cuts[index] = clamp(Math.round(value / 5) * 5, 15, 85);
+      if (index !== 0) {
+        cuts[0] = 100 - cuts.slice(1).reduce((a, b) => a + b, 0);
+        if (cuts[0] < 15) {
+          const overflow = 15 - cuts[0];
+          cuts[index] -= overflow;
+          cuts[0] = 15;
+        }
+      } else {
+        const rest = 100 - cuts[0];
+        const members = state.players - 1;
+        let base = Math.floor(rest / members / 5) * 5;
+        base = Math.max(15, base);
+        for (let i = 1; i < state.players; i++) cuts[i] = 15;
+        let leftover = 100 - cuts.reduce((a, b) => a + b, 0);
+        let i = 1;
+        while (leftover >= 5 && i < state.players) {
+          cuts[i] += 5;
+          leftover -= 5;
+          i = i === state.players - 1 ? 1 : i + 1;
+        }
+        if (leftover !== 0) cuts[0] += leftover;
+      }
+      for (let i = 0; i < 4; i++) state.cuts[i] = cuts[i] ?? 15;
+    }
+
+    document.querySelector(".wrap").addEventListener("click", (e) => {
+      const pBtn = e.target.closest("[data-players]");
+      if (pBtn) { setPlayerCount(Number(pBtn.dataset.players)); render(); return; }
+      const prim = e.target.closest("[data-primary]");
+      if (prim) { state.primary = prim.dataset.primary; render(); return; }
+      if (e.target.closest("#hardToggle")) { state.hard = !state.hard; render(); return; }
+      if (e.target.closest("#repeatToggle")) { state.repeat = !state.repeat; render(); return; }
+      if (e.target.closest("#setupToggle")) { state.setup = !state.setup; render(); return; }
+      const lootBtn = e.target.closest("[data-loot][data-delta]");
+      if (lootBtn) {
+        const key = lootBtn.dataset.loot;
+        if (key === "gold" && state.players < 2) return;
+        state.loot[key] = clamp(state.loot[key] + Number(lootBtn.dataset.delta), 0, LOOT[key].max);
+        render();
+      }
+    });
+
+    document.querySelector(".wrap").addEventListener("change", (e) => {
+      if (e.target.matches("[data-cut]")) {
+        setCut(Number(e.target.dataset.cut), Number(e.target.value));
+        render();
+      }
+      if (e.target.matches("[data-loot-input]")) {
+        const key = e.target.dataset.lootInput;
+        state.loot[key] = clamp(Math.round(Number(e.target.value) || 0), 0, LOOT[key].max);
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
