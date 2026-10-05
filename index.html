@@ -726,16 +726,19 @@
       gap: 8px;
     }
 
+    /* Button-specific color, same in both themes; white text keeps ~5.7:1 contrast. */
     .copy-results {
+      --copy-results-bg: #7c3aed;
+      --copy-results-bg-hover: #6d28d9;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-height: 30px;
       padding: 5px 9px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--copy-results-bg);
       border-radius: calc(var(--radius) - 2px);
-      background: var(--secondary);
-      color: var(--secondary-foreground);
+      background: var(--copy-results-bg);
+      color: #fff;
       font: 700 11px Geist, sans-serif;
       letter-spacing: 0.02em;
       cursor: pointer;
@@ -743,14 +746,16 @@
     }
 
     .copy-results:hover {
-      background: var(--accent);
-      border-color: var(--input);
+      background: var(--copy-results-bg-hover);
+      border-color: var(--copy-results-bg-hover);
       transform: translateY(-1px);
     }
 
+    .copy-results:focus-visible { outline: 2px solid var(--copy-results-bg); outline-offset: 2px; }
     .copy-results:disabled { cursor: wait; transform: none; }
     .copy-results.copied { color: var(--primary-foreground); border-color: var(--primary); background: var(--primary); }
-    .copy-results.failed { color: var(--danger); border-color: var(--destructive); }
+    /* Neutral background so the red error text stays readable. */
+    .copy-results.failed { color: var(--danger); border-color: var(--destructive); background: var(--secondary); }
 
     .players {
       display: grid;
